@@ -1,4 +1,4 @@
-# Anonymous RTL Artifact Guide
+# RTL Artifact Guide
 
 This package is prepared for double-blind RTL reproducibility review. It includes a sanitized SAGE-16 fabric implementation, simulation testbenches, and the minimal data payload required to rerun reported checks.
 
