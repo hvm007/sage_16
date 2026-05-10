@@ -1,4 +1,4 @@
-# Anonymous Upload Manifest
+# Manifest
 
 This file records the finalized sanitized artifact contents for upload.
 
