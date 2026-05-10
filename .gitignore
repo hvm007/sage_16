@@ -1,0 +1,29 @@
+# Simulator artifacts
+build/
+*.vvp
+*.vcd
+
+# Vivado junk
+*.jou
+*.log
+*.backup*
+.Xil/
+*.str
+vivado_*.str
+.vivado/
+fsm_encoding.os
+
+# Fresh synth reports (keep reports/old/ baseline under version control)
+reports/*.txt
+reports/*.rpt
+reports/*.xml
+!reports/old/
+
+# Editor / OS
+*.swp
+*.bak
+*~
+Thumbs.db
+.DS_Store
+.vscode/
+.idea/

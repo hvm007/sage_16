@@ -1,0 +1,17 @@
+version: v2
+best_test_acc: 0.9504
+w_max: 4
+conv2_shift: 4
+epochs: 140
+augmentation: False
+conv1_max: 3
+conv2_max: 3
+w1_max: 3
+w2_max: 4
+conv1_nz: 45
+conv2_nz: 633
+w1_nz: 5438
+w2_nz: 187
+n_export: 10000
+export_acc: 0.9504
+export_correct: 9504
