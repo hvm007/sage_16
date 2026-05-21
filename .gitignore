@@ -27,3 +27,7 @@ Thumbs.db
 .DS_Store
 .vscode/
 .idea/
+
+# Large generated ML artifacts
+data/cifar10_*/
+firmware/*_data.h

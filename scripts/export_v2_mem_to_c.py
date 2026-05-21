@@ -5,7 +5,7 @@ and emit a single C header for the STM32 M4 bench (MINICNN_V2_REAL_MNIST).
 
 Usage:
   python scripts/export_v2_mem_to_c.py
-  python scripts/export_v2_mem_to_c.py --n-img 3 --out E:/Btech/Project/srip/arm/sage16_baseline/Core/Inc/minicnn_v2_mnist_data.h
+  python scripts/export_v2_mem_to_c.py --n-img 3 --out firmware/minicnn_v2_mnist_data.h
 
 Default: all 200 images (matches +define+REAL_MNIST N_IMG=200 in sim). Use --n-img 3
 for a smaller binary during bring-up; per-image DWT is identical for the C loops.

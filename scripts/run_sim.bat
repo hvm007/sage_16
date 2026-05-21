@@ -9,6 +9,7 @@ REM    run_sim.bat pcpi         -> RISC-V PCPI (matmul only)
 REM    run_sim.bat mmio         -> 32-bit MMIO (matmul only)
 REM    run_sim.bat conv         -> 3x3 convolution (signed kernels)
 REM    run_sim.bat quat         -> quaternion multiply (signed ops)
+REM    run_sim.bat quat-vrot    -> quaternion vector rotation (two Hamilton ops)
 REM    run_sim.bat reconfig     -> matmul -> conv -> quat back-to-back demo
 REM    run_sim.bat mmio_top     -> multi-kernel MMIO (all 3 kernels)
 REM    run_sim.bat pcpi_top     -> multi-kernel PCPI (all 3 kernels)
@@ -18,6 +19,7 @@ REM    run_sim.bat minicnn      -> 3x3 small CNN end-to-end (Conv1+FC1+FC2)
 REM    run_sim.bat minicnn-mnist -> same TB but on real MNIST trained INT4 weights
 REM    run_sim.bat minicnn-v2   -> deeper MiniCNN v2 (Conv1+Pool+Conv2+FC1+FC2) synthetic
 REM    run_sim.bat minicnn-v2-mnist -> v2 on real MNIST (data\v2\*.mem)
+REM    run_sim.bat cifar10-v5-smoke -> CIFAR-10 v5 frozen export, first 2 images
 REM    run_sim.bat madgwick     -> quaternion attitude filter (100 IMU steps)
 REM =============================================================================
 
@@ -33,6 +35,7 @@ if "%1"=="pcpi"     goto pcpi
 if "%1"=="mmio"     goto mmio
 if "%1"=="conv"     goto conv
 if "%1"=="quat"     goto quat
+if "%1"=="quat-vrot" goto quat-vrot
 if "%1"=="reconfig" goto reconfig
 if "%1"=="mmio_top" goto mmio_top
 if "%1"=="pcpi_top" goto pcpi_top
@@ -42,6 +45,7 @@ if "%1"=="minicnn"  goto minicnn
 if "%1"=="minicnn-mnist" goto minicnn-mnist
 if "%1"=="minicnn-v2"       goto minicnn-v2
 if "%1"=="minicnn-v2-mnist" goto minicnn-v2-mnist
+if "%1"=="cifar10-v5-smoke" goto cifar10-v5-smoke
 if "%1"=="madgwick" goto madgwick
 if "%1"=="matmul"   goto matmul
 
@@ -96,6 +100,16 @@ echo ==================================================
 iverilog -g2012 -o build\sim_quat.vvp %RTL% rtl\quat_sage16.v sim\tb_quat.v || goto err
 vvp build\sim_quat.vvp
 if "%1"=="quat" goto done
+
+:quat-vrot
+echo.
+echo ==================================================
+echo   5b/6 quaternion vector rotation  (sim\tb_quat.v)
+echo        v = q * v * q_conj via two Hamilton ops
+echo ==================================================
+iverilog -g2012 -DQUAT_VROT_ONLY -o build\sim_quat_vrot.vvp %RTL% rtl\quat_sage16.v sim\tb_quat.v || goto err
+vvp build\sim_quat_vrot.vvp
+if "%1"=="quat-vrot" goto done
 
 :reconfig
 echo.
@@ -207,6 +221,29 @@ vvp build\sim_minicnn_v2_mnist.vvp
 if "%1"=="minicnn-v2-mnist" goto done
 
 :skip_minicnn_v2_mnist
+
+goto skip_cifar10_v5_smoke
+
+:cifar10-v5-smoke
+echo.
+echo ==================================================
+echo   11e/12 CIFAR-10 v5 smoke on SAGE-16 (sim\tb_cifar10_v5.v)
+echo        loads local data\cifar10_v5\*.mem, first 2 images
+echo        six conv3x3 layers + GAP + FC, compares exported preds.txt
+echo ==================================================
+if not exist data\cifar10_v5\images.mem (
+    echo data\cifar10_v5\images.mem missing -- generate or copy CIFAR-v5 artifacts first
+    goto err
+)
+if not exist data\cifar10_v5\conv6_b.mem (
+    echo data\cifar10_v5\conv6_b.mem missing -- need frozen v5 folded int32 bias artifacts
+    goto err
+)
+iverilog -g2012 -DREAL_CIFAR10_V5 "-Ptb_cifar10_v5.N_IMG=2" "-Ptb_cifar10_v5.POOL1_SHIFT=0" "-Ptb_cifar10_v5.POOL2_SHIFT=0" "-Ptb_cifar10_v5.GAP_SHIFT=0" "-Ptb_cifar10_v5.FINAL_SHIFT=4" -o build\sim_cifar10_v5_smoke.vvp %RTL% rtl\sage16_top.v sim\tb_cifar10_v5.v || goto err
+vvp build\sim_cifar10_v5_smoke.vvp
+if "%1"=="cifar10-v5-smoke" goto done
+
+:skip_cifar10_v5_smoke
 
 :madgwick
 echo.

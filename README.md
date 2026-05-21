@@ -6,7 +6,7 @@ This package is prepared for double-blind RTL reproducibility review. It include
 
 - Windows command prompt (`cmd`) or PowerShell
 - Icarus Verilog (`iverilog`, `vvp`) in `PATH`
-- Python 3 (optional, only for regenerating `data/v2/*.mem`)
+- Python 3 (optional, only for regenerating `data/v2/*.mem` or CIFAR-10 exports)
 - Vivado (optional, only for synthesis reproduction)
 
 ## 2) Required quick validation
@@ -16,6 +16,7 @@ Run these commands from the artifact root:
 ```bat
 run_sim.bat matmul
 run_sim.bat minicnn-v2
+run_sim.bat quat-vrot
 ```
 
 Expected behavior for each command:
@@ -37,6 +38,12 @@ run_sim.bat
 run_sim.bat minicnn-v2-mnist
 ```
 
+- CIFAR-10 v5 smoke path after generating or copying `data/cifar10_v5/*.mem` locally:
+
+```bat
+run_sim.bat cifar10-v5-smoke
+```
+
 ## 4) Optional data regeneration
 
 To regenerate the bundled `data/v2/*.mem` payload:
@@ -44,6 +51,14 @@ To regenerate the bundled `data/v2/*.mem` payload:
 ```bat
 python scripts\train_minicnn_v2.py
 ```
+
+To train/export CIFAR-10 artifacts locally:
+
+```bat
+python scripts\train_minicnn_cifar10.py --arch v5 --smoke --synthetic
+```
+
+See `docs/CIFAR10_TRAIN_EXPORT.md` for the full CIFAR export flow. Large CIFAR `.mem` payloads and generated C headers are intentionally excluded from Git.
 
 ## 5) Optional synthesis reproduction
 
