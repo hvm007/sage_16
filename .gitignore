@@ -19,6 +19,9 @@ reports/*.rpt
 reports/*.xml
 !reports/old/
 
+# Python
+__pycache__/
+
 # Editor / OS
 *.swp
 *.bak
