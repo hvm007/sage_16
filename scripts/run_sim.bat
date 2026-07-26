@@ -15,6 +15,7 @@ REM    run_sim.bat mmio_top     -> multi-kernel MMIO (all 3 kernels)
 REM    run_sim.bat pcpi_top     -> multi-kernel PCPI (all 3 kernels)
 REM    run_sim.bat tiled        -> 8x8 and 16x16 matmul via 4x4 tiling
 REM    run_sim.bat b2b          -> 1-cycle back-to-back reconfig demo
+REM    run_sim.bat pairs        -> all 6 directed mode transitions, 1-cycle cfg
 REM    run_sim.bat minicnn      -> 3x3 small CNN end-to-end (Conv1+FC1+FC2)
 REM    run_sim.bat minicnn-mnist -> same TB but on real MNIST trained INT4 weights
 REM    run_sim.bat minicnn-v2   -> deeper MiniCNN v2 (Conv1+Pool+Conv2+FC1+FC2) synthetic
@@ -41,6 +42,7 @@ if "%1"=="mmio_top" goto mmio_top
 if "%1"=="pcpi_top" goto pcpi_top
 if "%1"=="tiled"    goto tiled
 if "%1"=="b2b"      goto b2b
+if "%1"=="pairs"    goto pairs
 if "%1"=="minicnn"  goto minicnn
 if "%1"=="minicnn-mnist" goto minicnn-mnist
 if "%1"=="minicnn-v2"       goto minicnn-v2
@@ -162,6 +164,17 @@ echo ==================================================
 iverilog -g2012 -o build\sim_b2b.vvp %RTL% rtl\sage16_top.v sim\tb_reconfig_b2b.v || goto err
 vvp build\sim_b2b.vvp
 if "%1"=="b2b" goto done
+
+:pairs
+echo.
+echo ==================================================
+echo   10b/12 Directed mode-transition sweep (sim\tb_reconfig_pairs.v)
+echo        all 6 ordered kernel transitions, 1-cycle cfg,
+echo        192 outputs checked bit-exact
+echo ==================================================
+iverilog -g2012 -o build\sim_pairs.vvp %RTL% rtl\sage16_top.v sim\tb_reconfig_pairs.v || goto err
+vvp build\sim_pairs.vvp
+if "%1"=="pairs" goto done
 
 :minicnn
 echo.
