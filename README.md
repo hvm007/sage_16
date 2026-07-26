@@ -13,7 +13,7 @@ scripts, and data needed to reproduce the results of our APCCAS 2026 paper:
 
 > Harshvardhan Mishra and Madhav Rao,
 > *"SAGE-16: A 16-DSP Reconfigurable Fabric for Edge Vision and Attitude Kernels,"*
-> IEEE Asia Pacific Conference on Circuits and Systems (APCCAS), 2026.
+> to appear in IEEE Asia Pacific Conference on Circuits and Systems (APCCAS), 2026.
 
 ## Highlights
 
@@ -167,6 +167,7 @@ Released under the [MIT License](LICENSE).
   author    = {Mishra, Harshvardhan and Rao, Madhav},
   title     = {{SAGE-16}: A 16-{DSP} Reconfigurable Fabric for Edge Vision and Attitude Kernels},
   booktitle = {IEEE Asia Pacific Conference on Circuits and Systems (APCCAS)},
-  year      = {2026}
+  year      = {2026},
+  note      = {to appear}
 }
 ```
